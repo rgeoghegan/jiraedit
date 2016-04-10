@@ -1,0 +1,4 @@
+[{nickname for the jira instance}]
+server = {base url of your jira instance}
+username = {your username}
+password = {your password}
