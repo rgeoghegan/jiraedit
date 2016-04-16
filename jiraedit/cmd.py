@@ -3,15 +3,19 @@ import configparser
 import os
 
 from .issue import JiraIssue
-from .testing import FakeJiraIssue
 
 def parse_args():
     parser = argparse.ArgumentParser(
+        prog='jiraedit',
         description='Edit jira issues through the command line'
     )
     parser.add_argument(
         '-c', '--config', default='~/.jiraeditrc',
         help='Which config ini file to use (default %(default)s)'
+    )
+    parser.add_argument(
+        '-p', '--print', action='store_true', dest='just_print',
+        help='Instead of editing an issue, just print it to screen'
     )
     parser.add_argument(
         'issue', help='Issue identifier to edit'
@@ -25,12 +29,22 @@ def read_config(config_path):
     return config
 
 
+def edit_with_vim(filename):
+    subprocess.check_call(['vim', filename])
+
+
 def run():
     args = parse_args()
     config = read_config(args.config)
 
-    issue = FakeJiraIssue(
-        args.issue,
-        config[config.sections()[0]]
-    )
-    print(issue)
+    # Use the first defined connection for now, we will add an argument to
+    # pick different ones in the future.
+    conn_config = config[config.sections()[0]]
+    issue = JiraIssue.from_issue_id(conn_config, args.issue)
+
+    if args.just_print:
+        print(issue)
+    else:
+        # Right now, I just edit with vim, but in the future I'll make this
+        # configurable.
+        issue.edit(edit_with_vim)

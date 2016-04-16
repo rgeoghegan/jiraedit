@@ -15,3 +15,18 @@ class FakeJiraIssue(JiraIssue):
                 'et.',
         }
 
+    def edit(self):
+        text = """CASE-42: Test issue, plz ignore
+-------------------------------
+
+Assignee:  Bobby
+Description:
+
+Quos alias quisquam inventore. 
+
+Doloremque aperiam enim error ex nisi dolorem amet. Assumenda vero architecto dignissimos neque rerum corporis reprehenderit et.
+"""
+        for n in self.parse_differences(text):
+            print(n)
+        return
+

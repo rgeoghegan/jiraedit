@@ -17,7 +17,7 @@ setup(
     version = "0.0.1",
     author = "Rory Geoghegan",
     author_email = "r.geoghegan@gmail.com",
-    description = "Edit your jira cases from the command line."
+    description = "Edit your jira cases from the command line.",
 
     packages=['jiraedit', 'tests'],
     install_requires = requirements,
@@ -26,6 +26,8 @@ setup(
             'jiraedit = jiraedit.cmd:run',
         ],
     },
+
+    test_suite='tests',
     
     license = "BSD",
     keywords = "jira",
