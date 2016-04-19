@@ -1,6 +1,7 @@
 import argparse
 import configparser
 import os
+import subprocess
 
 from .issue import JiraIssue
 

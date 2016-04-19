@@ -14,13 +14,42 @@ EXAMPLE_ISSUE = {
         'et.',
 }
 
+USERS = [
+    {'email': 'ewell.runolfsdottir@zieme.com',
+     'fullname': 'Ewell Runolfsdottir'},
+    {'email': 'cayden.zemlak@herman.info',
+     'fullname': 'Cayden Zemlak'},
+    {'email': 'lacie.ratke@gutmann.com',
+     'fullname': 'Lacie Ratke'},
+    {'email': 'denton.swift@maggio-kulas.biz',
+     'fullname': 'Denton Swift'},
+]
 
-class FakeIssueConnection(JiraIssueConnection):
+
+class FakeIssueConnection:
+    """Mock class mimicking a JiraIssueConnection."""
     def __init__(self, serialized=None):
         self.serialized = serialized or EXAMPLE_ISSUE
 
     def serialize(self):
         return self.serialized
+
+    def valid_assignees(self):
+        users = {}
+        for u in USERS:
+            username = (u['email']
+                        if u['email'] != 'cayden.zemlak@herman.info'
+                        else 'admin')
+            
+            active = u['email'] != 'lacie.ratke@gutmann.com'
+
+            users[username] = {
+                'active': active,
+                'email': u['email'],
+                'fullname': u['fullname']
+            }
+
+        return users
 
 
 class TestPrinting(unittest.TestCase):
