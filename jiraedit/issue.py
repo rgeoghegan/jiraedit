@@ -3,6 +3,8 @@ import tempfile
 import jira
 import tabulate
 
+from .printer import JiraPrinter
+
 def user_string(user):
     if user is None:
         return "None"
@@ -43,7 +45,7 @@ def split_by_colon(line):
     return a.strip(), b.strip()
 
 
-class JiraPrinter:
+class OldJiraPrinter:
     FIELD_ORDER = ['Assignee']
 
     def __init__(self, serialized):
@@ -99,11 +101,13 @@ class JiraIssue:
         editor(dump.name)
 
         with open(dump.name, 'r') as f:
-            parsed = self.parse(f.read())
+            parsed = self.parse(f)
             for key, (orig, new) in self.diff(parsed).items():
                 print("{}: {!r} -> {!r}".format(key, orig, new))
 
-    def parse(self, text):
+    def parse(self, stream):
+        return self.printer.parse(stream)
+
         lines = text.split('\n')
 
         issue_id, summary = split_by_colon(lines[0])

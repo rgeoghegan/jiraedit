@@ -1,4 +1,5 @@
 import unittest
+import io
 
 from jiraedit.issue import (
     JiraIssue, ParseCaseTextException, JiraIssueConnection
@@ -65,7 +66,7 @@ class TestPrinting(unittest.TestCase):
 class TestParsing(unittest.TestCase):
     def test_simple_parsing(self):
         issue = JiraIssue(FakeIssueConnection())
-        parsed = issue.parse(
+        parsed = issue.parse(io.StringIO(
             "CASE-42: Test issue, plz ignore\n"
             "-------------------------------\n"
             "\n"
@@ -75,9 +76,10 @@ class TestParsing(unittest.TestCase):
             "Quos alias quisquam inventore. \n\nDoloremque aperiam enim "
             "error ex nisi dolorem amet. Assumenda vero architecto "
             "dignissimos neque rerum corporis reprehenderit et.\n"
-        )
+            "=========="
+        ))
 
-        self.assertEqual(parsed, EXAMPLE_ISSUE)
+        self.assertEqual(dict(parsed), EXAMPLE_ISSUE)
 
 
 class TestDifferences(unittest.TestCase):
